@@ -1,5 +1,7 @@
 import tkinter as tk
 import maze as mz
+import graph as gr
+import networkx as nx
 
 class UI:
 
@@ -47,14 +49,22 @@ class UI:
             if (self.buttons[r[0]][r[1]].cget("text") != "Start\nPoint") & (self.buttons[r[0]][r[1]].cget("text") != "Finish\nPoint"):
                 self.buttons[r[0]][r[1]].config(text="route")
 
+    def find_best_route_astar(self):
+        pos = {}
+        g = gr.build_graph(self.maze, pos)
+        print(g)
+        path = nx.astar_path(g, gr.Node(self.maze.start_cell[1], self.maze.start_cell[0]), gr.Node(self.maze.end_cell[1], self.maze.end_cell[0]))
+        for n in path:
+            self.buttons[n.col][n.row].config(text="route")
+
     def draw_maze(self):
         # Create a Tkinter window
         window = tk.Tk()
         window.title("Maze Solver")
 
         # global buttons, button_colors
-        self.buttons = [[None for _ in range(self.height)] for _ in range(self.width)]
-        self.button_colors = [["white" for _ in range(self.height)] for _ in range(self.width)]
+        self.buttons = [[None for _ in range(self.width)] for _ in range(self.height)]
+        self.button_colors = [["white" for _ in range(self.width)] for _ in range(self.height)]
 
         # Create a grid of buttons
         for row in range(self.width):
@@ -76,7 +86,7 @@ class UI:
         remove_element_button = tk.Button(window, text="Remove", command=self.remove_element, width=self.buttons_size, height=self.buttons_size)
         remove_element_button.grid(row=self.width, column=3)
 
-        remove_element_button = tk.Button(window, text="Find\nbest\nroute", command=self.find_best_route, width=self.buttons_size, height=self.buttons_size)
+        remove_element_button = tk.Button(window, text="Find\nbest\nroute", command=self.find_best_route_astar, width=self.buttons_size, height=self.buttons_size)
         remove_element_button.grid(row=self.width, column=4)
 
         # Start the Tkinter event loop

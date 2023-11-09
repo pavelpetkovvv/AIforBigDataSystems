@@ -3,7 +3,7 @@ class Cell:
         self.is_border = is_border
 
     def __str__(self):
-        return "X" if self.is_border else " "
+        return "X" if self.is_border else "0"
 
 class Maze:
     def __init__(self, width, height):
